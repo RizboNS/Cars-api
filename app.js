@@ -1,12 +1,27 @@
 const express = require('express')
 const logger = require('morgan')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+require('dotenv/config')
 const app = express()
+
+
+// DB Connect
+mongoose.connect(process.env.DB_CONNECTION, {
+    useNewUrlParser:true,
+    useUnifiedTopology:true
+})
+.then(
+console.log('Connected to the DB!')
+)
+.catch(err => console.log(err))
 
 // Routes
 const users = require('./routes/users')
 
 // Middlewares
 app.use(logger('dev'))
+app.use(bodyParser.json())
 
 // Routes
 app.use('/users', users)
