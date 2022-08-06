@@ -2,21 +2,15 @@ const User = require('../models/user')
 
 
 module.exports = {
+    // Get all users
     index: async (req, res, next) => {
-        try {
-            const users = await User.find()
-            res.status(200).json(users)
-        } catch (err) {
-            next(err)
-        }
+        const users = await User.find()
+        res.status(200).json(users)
     },
+    // Create new user
     newUser: async (req, res, next) => {
         const newUser = new User(req.body)
-        try {
-            const savedUser = await newUser.save()
-            res.status(200).json(savedUser)
-        } catch (err) {
-            next(err)
-        }
+        const savedUser = await newUser.save()
+        res.status(201).json(savedUser)
     }
 }
