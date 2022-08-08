@@ -2,8 +2,10 @@ const express = require('express')
 const logger = require('morgan')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const helmet = require('helmet')
 require('dotenv/config')
 const app = express()
+app.use(helmet())
 
 
 // DB Connect
@@ -15,6 +17,8 @@ mongoose.connect(process.env.DB_CONNECTION, {
 console.log('Connected to the DB!')
 )
 .catch(err => console.log(err))
+
+// Security
 
 // Routes
 const users = require('./routes/users')
