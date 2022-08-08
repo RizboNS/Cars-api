@@ -5,7 +5,7 @@ const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
 
 const { validateParam, schemas, validateBody } = require('../helpers/routeHelpers')
-const { schema } = require('../models/user')
+
 
 router.route('/')
     .get(UsersController.index)
@@ -33,7 +33,7 @@ router.route('/:userId/cars')
         UsersController.getUserCars)
     .post([
         validateParam(schemas.idSchema, 'userId'),
-        validateBody(schemas.carSchema)
+        validateBody(schemas.userCarSchema)
     ],
         UsersController.newUserCar)
 
