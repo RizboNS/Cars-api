@@ -3,6 +3,7 @@ const logger = require('morgan')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const helmet = require('helmet')
+const cors = require('cors')
 require('dotenv/config')
 const app = express()
 app.use(helmet())
@@ -25,6 +26,7 @@ const users = require('./routes/users')
 const cars = require('./routes/cars')
 
 // Middlewares
+app.use(cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 
