@@ -50,6 +50,6 @@ module.exports = {
         await newCar.save()
         user.cars.push(newCar)
         await user.save()
-        res.status(201).json(newCar)
+        res.status(201).json({succes: true})
     }
 }
