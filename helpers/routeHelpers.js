@@ -7,7 +7,7 @@ module.exports = {
             console.log('req.params', req.params)
             const result = schema.validate({param: req['params'][name]})
             if (result.error) {
-                return res.status(400).json(result.error)
+                return res.status(400).json(result.error.details[0].message)
             } else {
                 if (!req.value)
                     req.value = {}
@@ -23,7 +23,7 @@ module.exports = {
         return (req, res, next) => {
             const result = schema.validate(req.body)
             if (result.error) {
-                return res.status(400).json(result.error)
+                return res.status(400).json(result.error.details[0].message)
             } else {
                 if (!req.value)
                     req.value = {}
@@ -37,14 +37,20 @@ module.exports = {
     },
     schemas: {
         userOptionalSchema: Joi.object().keys({
-            firstName: Joi.string(),
-            lastName: Joi.string(),
-            email: Joi.string().email()
+            firstName: Joi.string().min(2),
+            lastName: Joi.string().min(2),
+            email: Joi.string().email(),
+            password: Joi.string().min(6)
         }),
         userSchema: Joi.object().keys({
-            firstName: Joi.string().required(),
-            lastName: Joi.string().required(),
-            email: Joi.string().email().required()
+            firstName: Joi.string().min(2).required(),
+            lastName: Joi.string().min(2).required(),
+            email: Joi.string().email().required(),
+            password: Joi.string().min(6).required()
+        }),
+        userLoginSchema: Joi.object().keys({
+            email: Joi.string().email().required(),
+            password: Joi.string().min(6).required()           
         }),
         userCarSchema: Joi.object().keys({
             make: Joi.string().required(),

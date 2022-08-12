@@ -1,47 +1,51 @@
 const User = require('../models/user')
 const Car = require('../models/car')
+const bcrypt = require('bcryptjs')
 
 module.exports = {
-    // Get all users - Validation (done)
     index: async (req, res, next) => {
         const users = await User.find()
         res.status(200).json(users)
     },
-    // Create new user - Validation (done)
     newUser: async (req, res, next) => {
+        const emailExist = await User.findOne({email: req.value.body.email})
+        if (emailExist) return res.status(400).send('Email already exist')
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(req.value.body.password, salt)
+        req.value.body.password = hashedPassword
         const newUser = new User(req.value.body)
-        // const newUser = new User(req.body)
         const savedUser = await newUser.save()
-        res.status(201).json(savedUser)
+        res.status(201).json({userId: savedUser._id})
     },
-    // Get user by userId - Validation (done)
+    userLogin: async (req, res, next) => {
+        const user = await User.findOne({email: req.value.body.email})
+        if (!user) return res.status(400).send('Email or password invalid')
+        const validPass = await bcrypt.compare(req.value.body.password, user.password)
+        if (!validPass) return res.status(400).send('Email or password invalid')
+        res.send({success: true})
+    },
     getUser: async (req, res, next) => {
         const { userId } = req.value.params
-        // const { userId } = req.params
         const user = await User.findById(userId)
         res.status(200).json(user)
     },
-    // Validation (done)
     replaceUser: async (req, res, next) => {
         const { userId } = req.value.params
         const newUser = req.value.body
         const result = await User.findByIdAndUpdate(userId, newUser)
         res.status(200).json({success: true})
     },
-    // Validation (done)
     updateUser: async (req, res, next) => {
         const { userId } = req.value.params
         const newUser = req.value.body
         const result = await User.findByIdAndUpdate(userId, newUser)
         res.status(200).json({success: true})
     },
-    // Validation (done)
     getUserCars: async (req, res, next) => {
         const { userId } = req.value.params
         const user = await User.findById(userId).populate('cars')
         res.status(200).json(user.cars)
     },
-    // Validation (done)
     newUserCar: async (req, res, next) => {
         const { userId } = req.value.params
         const newCar = new Car(req.value.body)
@@ -50,6 +54,6 @@ module.exports = {
         await newCar.save()
         user.cars.push(newCar)
         await user.save()
-        res.status(201).json({succes: true})
+        res.status(201).json(newCar)
     }
 }

@@ -9,7 +9,11 @@ const { validateParam, schemas, validateBody } = require('../helpers/routeHelper
 
 router.route('/')
     .get(UsersController.index)
+
+router.route('/register')
     .post(validateBody(schemas.userSchema),UsersController.newUser)
+router.route('/login')
+    .post(validateBody(schemas.userLoginSchema), UsersController.userLogin)
 
 router.route('/:userId')
     .get(validateParam(
