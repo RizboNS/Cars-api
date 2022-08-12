@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const Car = require('../models/car')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 
 module.exports = {
     index: async (req, res, next) => {
@@ -22,7 +24,8 @@ module.exports = {
         if (!user) return res.status(400).send('Email or password invalid')
         const validPass = await bcrypt.compare(req.value.body.password, user.password)
         if (!validPass) return res.status(400).send('Email or password invalid')
-        res.send({success: true})
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
+        res.header('auth-token', token).send(token)
     },
     getUser: async (req, res, next) => {
         const { userId } = req.value.params

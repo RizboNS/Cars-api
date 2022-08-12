@@ -1,7 +1,7 @@
 const express = require('express')
 // const router = express.Router()
 const router = require('express-promise-router')()
-
+const verify = require('../routes/verifyToken')
 const UsersController = require('../controllers/users')
 
 const { validateParam, schemas, validateBody } = require('../helpers/routeHelpers')
@@ -9,7 +9,6 @@ const { validateParam, schemas, validateBody } = require('../helpers/routeHelper
 
 router.route('/')
     .get(UsersController.index)
-
 router.route('/register')
     .post(validateBody(schemas.userSchema),UsersController.newUser)
 router.route('/login')
@@ -25,10 +24,11 @@ router.route('/:userId')
         UsersController.replaceUser
     )
     .patch([
-        validateParam(schemas.idSchema, 'userId'),
-        validateBody(schemas.userOptionalSchema)
-    ],
-        UsersController.updateUser
+            validateParam(schemas.idSchema, 'userId'),
+            validateBody(schemas.userOptionalSchema)
+        ],
+            verify,
+            UsersController.updateUser,
         )
 
 router.route('/:userId/cars')
