@@ -10,6 +10,7 @@ module.exports = {
         res.status(200).json(users)
     },
     newUser: async (req, res, next) => {
+        req.value.body.email = req.value.body.email.toLowerCase()
         const emailExist = await User.findOne({email: req.value.body.email})
         if (emailExist) return res.status(400).send('Email already exist')
         const salt = await bcrypt.genSalt(10)
@@ -20,11 +21,12 @@ module.exports = {
         res.status(201).json({userId: savedUser._id})
     },
     userLogin: async (req, res, next) => {
+        req.value.body.email = req.value.body.email.toLowerCase()
         const user = await User.findOne({email: req.value.body.email})
         if (!user) return res.status(400).send('Email or password invalid')
         const validPass = await bcrypt.compare(req.value.body.password, user.password)
         if (!validPass) return res.status(400).send('Email or password invalid')
-        const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
+        const token = jwt.sign({_id: user._id }, process.env.TOKEN_SECRET)
         res.header('auth-token', token).send(token)
     },
     getUser: async (req, res, next) => {
