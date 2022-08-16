@@ -18,7 +18,9 @@ module.exports = {
         req.value.body.password = hashedPassword
         const newUser = new User(req.value.body)
         const savedUser = await newUser.save()
-        res.status(201).json({userId: savedUser._id})
+        const token = jwt.sign({_id: savedUser._id }, process.env.TOKEN_SECRET)
+        res.status(201).send({token})
+        // res.status(201).json({userId: savedUser._id})
     },
     userLogin: async (req, res, next) => {
         req.value.body.email = req.value.body.email.toLowerCase()
@@ -27,7 +29,8 @@ module.exports = {
         const validPass = await bcrypt.compare(req.value.body.password, user.password)
         if (!validPass) return res.status(400).send('Email or password invalid')
         const token = jwt.sign({_id: user._id }, process.env.TOKEN_SECRET)
-        res.header('auth-token', token).send(token)
+        // res.header('auth-token', token).send({token})
+        res.status(201).send({token})
     },
     getUser: async (req, res, next) => {
         const { userId } = req.value.params
@@ -59,6 +62,6 @@ module.exports = {
         await newCar.save()
         user.cars.push(newCar)
         await user.save()
-        res.status(201).json(newCar)
+        res.status(201).json({success: true})
     }
 }
