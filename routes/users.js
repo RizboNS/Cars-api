@@ -37,6 +37,7 @@ router.route('/:userId/cars')
         UsersController.getUserCars)
     .post([
         validateParam(schemas.idSchema, 'userId'),
+        verify,
         validateBody(schemas.userCarSchema)
     ],
         UsersController.newUserCar)

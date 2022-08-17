@@ -1,4 +1,5 @@
 const router = require('express-promise-router')()
+const verify = require('../routes/verifyToken')
 
 const CarsController = require('../controllers/cars')
 const {

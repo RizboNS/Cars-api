@@ -55,13 +55,18 @@ module.exports = {
         res.status(200).json(user.cars)
     },
     newUserCar: async (req, res, next) => {
+        const reqId = res.locals.user._id
         const { userId } = req.value.params
-        const newCar = new Car(req.value.body)
-        const user = await User.findById(userId)
-        newCar.seller = user
-        await newCar.save()
-        user.cars.push(newCar)
-        await user.save()
-        res.status(201).json({success: true})
+        if (reqId === userId) {
+            const newCar = new Car(req.value.body)
+            const user = await User.findById(userId)
+            newCar.seller = user
+            await newCar.save()
+            user.cars.push(newCar)
+            await user.save()
+            res.status(201).json({success: true})
+        } else {
+            res.status(400).json('Access denied only user owner can create car!')
+        }
     }
 }
