@@ -56,4 +56,15 @@ module.exports = {
     await seller.save();
     res.status(200).json({ success: true });
   },
+  getCarImage: async (req, res, next) => {
+    // console.log(req.params.imageId);
+    const { imageId } = req.params;
+    const { carId } = req.params;
+    const car = await Car.findById(carId);
+    car.images.forEach((image) => {
+      if (image._id == imageId) {
+        res.status(200).sendFile(image.imagePath);
+      }
+    });
+  },
 };

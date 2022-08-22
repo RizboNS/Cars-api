@@ -59,30 +59,30 @@ module.exports = {
     res.status(200).json(user.cars);
   },
   newUserCar: async (req, res, next) => {
-    // const reqId = res.locals.user._id;
+    const reqId = res.locals.user._id;
     const { userId } = req.value.params;
-    // if (reqId === userId) {
-    const newCar = new Car({
-      make: req.value.body.make,
-      model: req.value.body.model,
-      year: req.value.body.year,
-      images: [],
-    });
-    req.files.forEach(async (file) => {
-      // const imagePath = "http://localhost:3000/images/" + file.filename;
-      const imagePath = path.join(__dirname, "..", "images", file.filename);
-      newCar.images.push({
-        imagePath: imagePath,
+    if (reqId === userId) {
+      const newCar = new Car({
+        make: req.value.body.make,
+        model: req.value.body.model,
+        year: req.value.body.year,
+        images: [],
       });
-    });
-    const user = await User.findById(userId);
-    newCar.seller = user;
-    await newCar.save();
-    user.cars.push(newCar);
-    await user.save();
-    res.status(201).json(newCar);
-    // } else {
-    // res.status(400).json("Access denied only user owner can create car!");
-    // }
+      req.files.forEach(async (file) => {
+        // const imagePath = "http://localhost:3000/images/" + file.filename;
+        const imagePath = path.join(__dirname, "..", "images", file.filename);
+        newCar.images.push({
+          imagePath: imagePath,
+        });
+      });
+      const user = await User.findById(userId);
+      newCar.seller = user;
+      await newCar.save();
+      user.cars.push(newCar);
+      await user.save();
+      res.status(201).json(newCar);
+    } else {
+      res.status(400).json("Access denied only user owner can create car!");
+    }
   },
 };

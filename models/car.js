@@ -9,7 +9,6 @@ const carSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
   },
-  // Single Image for time being
   images: [
     {
       imagePath: { type: String, required: true },

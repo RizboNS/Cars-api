@@ -1,39 +1,36 @@
-const router = require('express-promise-router')()
-const verify = require('../routes/verifyToken')
+const router = require("express-promise-router")();
+const verify = require("../routes/verifyToken");
+const storage = require("../helpers/storage");
 
-const CarsController = require('../controllers/cars')
+const CarsController = require("../controllers/cars");
 const {
-    validateBody,
-    validateParam,
-    schemas
-} = require('../helpers/routeHelpers')
+  validateBody,
+  validateParam,
+  schemas,
+} = require("../helpers/routeHelpers");
 
-router.route('/')
-    .get(CarsController.index)
-    .post(
-            validateBody(schemas.carSchema),
-            CarsController.newCar
-        )
-router.route('/:carId')
-    .get(
-            validateParam(schemas.idSchema,'carId'),
-            CarsController.getCar)
-    .put([
-            validateParam(schemas.idSchema, 'carId'),
-            validateBody(schemas.putCarSchema)
-        ],
-        CarsController.replaceCar
-        )
-    .patch([
-        validateParam(schemas.idSchema, 'carId'),
-        validateBody(schemas.patchCarSchema)
+router
+  .route("/")
+  .get(CarsController.index)
+  .post(validateBody(schemas.carSchema), CarsController.newCar);
+router
+  .route("/:carId")
+  .get(validateParam(schemas.idSchema, "carId"), CarsController.getCar)
+  .put(
+    [
+      validateParam(schemas.idSchema, "carId"),
+      validateBody(schemas.putCarSchema),
     ],
-        CarsController.updateCar
-    )
-    .delete(
-        validateParam(schemas.idSchema, 'carId'),
-        CarsController.deleteCar
-    )
+    CarsController.replaceCar
+  )
+  .patch(
+    [
+      validateParam(schemas.idSchema, "carId"),
+      validateBody(schemas.patchCarSchema),
+    ],
+    CarsController.updateCar
+  )
+  .delete(validateParam(schemas.idSchema, "carId"), CarsController.deleteCar);
+router.route("/:carId/:imageId").get(storage, CarsController.getCarImage);
 
-
-module.exports = router
+module.exports = router;
