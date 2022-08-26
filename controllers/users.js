@@ -67,6 +67,18 @@ module.exports = {
         model: req.value.body.model,
         year: req.value.body.year,
         images: [],
+        color: req.value.body.color,
+        rangeDriven: req.value.body.rangeDriven,
+        price: req.value.body.price,
+        fuelSystem: req.value.body.fuelSystem,
+        bodyType: req.value.body.bodyType,
+        horsePower: req.value.body.horsePower,
+        engineDisplacement: req.value.body.engineDisplacement,
+        transitionType: req.value.body.transitionType,
+        equipment: req.value.body.equipment,
+        sellerPhone: req.value.body.sellerPhone,
+        sellerEmail: req.value.body.sellerEmail,
+        sellerComment: req.value.body.sellerComment,
       });
       req.files.forEach(async (file) => {
         // const imagePath = "http://localhost:3000/images/" + file.filename;
