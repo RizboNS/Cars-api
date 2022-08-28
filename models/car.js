@@ -13,7 +13,11 @@ const carSchema = new Schema({
   horsePower: String,
   engineDisplacement: String,
   transitionType: String,
-  equipment: [String],
+  equipment: [
+    {
+      type: String,
+    },
+  ],
   sellerPhone: String,
   sellerEmail: String,
   sellerComment: String,

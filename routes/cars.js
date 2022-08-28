@@ -27,6 +27,8 @@ router
     [
       validateParam(schemas.idSchema, "carId"),
       validateBody(schemas.patchCarSchema),
+      verify,
+      storage,
     ],
     CarsController.updateCar
   )

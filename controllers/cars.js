@@ -35,7 +35,23 @@ module.exports = {
   },
   updateCar: async (req, res, next) => {
     const { carId } = req.value.params;
-    const newCar = req.value.body;
+    const newCar = {
+      make: req.body.make,
+      model: req.body.model,
+      year: req.body.year,
+      color: req.body.color,
+      rangeDriven: req.body.rangeDriven,
+      price: req.body.price,
+      fuelSystem: req.body.fuelSystem,
+      bodyType: req.body.bodyType,
+      horsePower: req.body.horsePower,
+      engineDisplacement: req.body.engineDisplacement,
+      equipment: req.body.equipment,
+      transitionType: req.body.transitionType,
+      sellerPhone: req.body.sellerPhone,
+      sellerEmail: req.body.sellerEmail,
+      sellerComment: req.body.sellerComment,
+    };
     const result = await Car.findByIdAndUpdate(carId, newCar);
     res.status(200).json({ success: true });
   },
