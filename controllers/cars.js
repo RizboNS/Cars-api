@@ -1,6 +1,7 @@
 const Car = require("../models/car");
 const User = require("../models/user");
 const path = require("path");
+const fs = require("fs");
 module.exports = {
   index: async (req, res, next) => {
     // Get all cars
@@ -82,6 +83,16 @@ module.exports = {
     const sellerId = car.seller;
     // Get a seller
     const seller = await User.findById(sellerId);
+    // Remove images if car has any
+    car.images.forEach((image) => {
+      car.images.remove(image);
+      fs.unlink(image.imagePath, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+    });
     // Remove car
     await car.remove();
     // Remove car from the sellers selling list
@@ -107,9 +118,16 @@ module.exports = {
     car.images.forEach((image) => {
       if (image.fileName == imageFileName) {
         car.images.remove(image);
+        fs.unlink(image.imagePath, (err) => {
+          if (err) {
+            console.log(err);
+            res.status(400).json({ success: false });
+          } else {
+            car.save();
+            res.status(200).json({ success: true });
+          }
+        });
       }
     });
-    car.save();
-    res.status(200).json({ success: true });
   },
 };
