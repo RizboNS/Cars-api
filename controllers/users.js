@@ -85,6 +85,7 @@ module.exports = {
         const imagePath = path.join(__dirname, "..", "images", file.filename);
         newCar.images.push({
           imagePath: imagePath,
+          fileName: file.filename,
         });
       });
       const user = await User.findById(userId);

@@ -34,5 +34,8 @@ router
   )
   .delete(validateParam(schemas.idSchema, "carId"), CarsController.deleteCar);
 router.route("/:carId/:imageId").get(storage, CarsController.getCarImage);
+router
+  .route("/:carId/:imageFileName")
+  .delete(storage, CarsController.removeImage);
 
 module.exports = router;

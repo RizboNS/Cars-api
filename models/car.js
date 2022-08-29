@@ -28,6 +28,7 @@ const carSchema = new Schema({
   images: [
     {
       imagePath: { type: String, required: true },
+      fileName: { type: String, required: true },
     },
   ],
 });

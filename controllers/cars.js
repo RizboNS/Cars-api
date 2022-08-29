@@ -1,6 +1,6 @@
 const Car = require("../models/car");
 const User = require("../models/user");
-
+const path = require("path");
 module.exports = {
   index: async (req, res, next) => {
     // Get all cars
@@ -52,7 +52,24 @@ module.exports = {
       sellerEmail: req.body.sellerEmail,
       sellerComment: req.body.sellerComment,
     };
-    const result = await Car.findByIdAndUpdate(carId, newCar);
+    const car = await Car.findByIdAndUpdate(carId, newCar);
+    req.files.forEach(async (file) => {
+      let imageExist = false;
+      car.images.forEach((img) => {
+        if (img.fileName === file.filename) {
+          imageExist = true;
+        }
+      });
+      if (!imageExist) {
+        // const imagePath = "http://localhost:3000/images/" + file.filename;
+        const imagePath = path.join(__dirname, "..", "images", file.filename);
+        car.images.push({
+          imagePath: imagePath,
+          fileName: file.filename,
+        });
+      }
+    });
+    await car.save();
     res.status(200).json({ success: true });
   },
   deleteCar: async (req, res, next) => {
@@ -82,5 +99,17 @@ module.exports = {
         res.status(200).sendFile(image.imagePath);
       }
     });
+  },
+  removeImage: async (req, res, next) => {
+    const { imageFileName } = req.params;
+    const { carId } = req.params;
+    const car = await Car.findById(carId);
+    car.images.forEach((image) => {
+      if (image.fileName == imageFileName) {
+        car.images.remove(image);
+      }
+    });
+    car.save();
+    res.status(200).json({ success: true });
   },
 };

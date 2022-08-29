@@ -65,6 +65,7 @@ module.exports = {
       sellerComment: Joi.string().required(),
       images: {
         imagePath: Joi.string().required(),
+        fileName: Joi.string(),
       },
     }),
     carSchema: Joi.object().keys({
@@ -96,6 +97,7 @@ module.exports = {
       sellerComment: Joi.string(),
       images: {
         imagePath: Joi.string().required(),
+        fileName: Joi.string(),
       },
     }),
     idSchema: Joi.object().keys({
