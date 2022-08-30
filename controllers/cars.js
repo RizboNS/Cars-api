@@ -85,11 +85,10 @@ module.exports = {
     const seller = await User.findById(sellerId);
     // Remove images if car has any
     car.images.forEach((image) => {
-      car.images.remove(image);
       fs.unlink(image.imagePath, (err) => {
         if (err) {
           console.log(err);
-          return;
+          res.status(400).json({ success: false });
         }
       });
     });
